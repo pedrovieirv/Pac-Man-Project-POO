@@ -55,3 +55,68 @@ class PacMan {
     circle(this.x + TILE_SIZE / 2, this.y + TILE_SIZE / 2, TILE_SIZE);
   }
 }
+
+class Ghost {
+  constructor(x, y, color) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.velX = random([-GHOST_SPEED, GHOST_SPEED]);
+    this.velY = random([-GHOST_SPEED, GHOST_SPEED]);
+  }
+
+  move() {
+    if (this.canMove(this.x + this.velX, this.y + this.velY)) {
+      this.x += this.velX;
+      this.y += this.velY;
+    } else {
+      this.velX = random([-GHOST_SPEED, GHOST_SPEED]);
+      this.velY = random([-GHOST_SPEED, GHOST_SPEED]);
+    }
+  }
+
+  canMove(x, y) {
+    let col = floor(x / TILE_SIZE);
+    let row = floor(y / TILE_SIZE);
+
+    // Verifica se os índices estão dentro dos limites
+    if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
+      return maze[row][col] === 0;
+    } else {
+      return false;
+    }
+  }
+
+  draw() {
+    fill(this.color);
+    circle(this.x + TILE_SIZE / 2, this.y + TILE_SIZE / 2, TILE_SIZE);
+  }
+}
+
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  draw() {
+    fill('white');
+    circle(this.x + TILE_SIZE / 2, this.y + TILE_SIZE / 2, TILE_SIZE / 2);
+  }
+}
+
+class Score {
+  constructor() {
+    this.score = 0;
+  }
+
+  increase() {
+    this.score++;
+  }
+
+  draw() {
+    fill('white');
+    textSize(16);
+    text('Score: ' + this.score, 10, height - 10);
+  }
+}
