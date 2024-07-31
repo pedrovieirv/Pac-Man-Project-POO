@@ -10,7 +10,7 @@ Pedro Augusto vieira da Silva
 
 ## Introdução
 
-Pac-Man é um jogo de arcade clássico desenvolvido pela Namco e lançado em 1980. Neste projeto, recriamos Pac-Man usando JavaScript, HTML5 e CSS3. A implementação segue os princípios da programação orientada a objetos para garantir um código modular e reutilizável.
+Pac-Man é um jogo de arcade clássico desenvolvido pela Namco e lançado em 1980. Neste projeto, recriamos Pac-Man usando JavaScript. A implementação segue os princípios da programação orientada a objetos para garantir um código modular e reutilizável.
 
 ## Funcionalidades
 
