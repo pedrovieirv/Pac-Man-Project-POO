@@ -27,7 +27,7 @@ Pac-Man é um jogo de arcade clássico desenvolvido pela Namco e lançado em 198
 
 Feel free to use / copy / modify my code, as long as you reshare your version and give some credit to the original author (me).
 
-This project is licensed under the terms of the GNU General Public License (GPL) version 3. See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the terms of the GNU General Public License (GPL) version 3. See the [LICENSE](https://creativecommons.org/licenses/by-sa/4.0/) file for more details.
 
 
 Copyright (c) [2024] [Pedro Vieira]
@@ -44,5 +44,4 @@ Você deve ter recebido uma cópia da GNU General Public License junto com este 
 se não, escreva para a Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-[Google](https://creativecommons.org/licenses/by-sa/4.0/)
 
