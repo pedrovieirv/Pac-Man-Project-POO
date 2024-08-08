@@ -6,6 +6,8 @@ Luis Gustavo Guimarães Damião Pinto
 
 Pedro Augusto vieira da Silva 
 
+José Italo Lemos Coelho
+
 
 
 
