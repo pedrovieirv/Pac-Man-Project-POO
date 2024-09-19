@@ -5,103 +5,97 @@ class Mundo {
       new Fantasma(TAMANHO_TELA * 10, TAMANHO_TELA * 10, 'red'),
       new Fantasma(TAMANHO_TELA * 10, TAMANHO_TELA * 10, 'blue')
     ];
-    this.pontos = this.gerarPontos();
-    this.bonuses = this.gerarBonus();
+    this.pontos = [];
     this.pontuacao = new Pontuacao();
+    this.bonuses = [];
     this.gameOver = false;
+    this.labirinto = [];
   }
 
   gerarPontos() {
-    const pontos = [];
+    this.pontos = [];
     for (let linha = 0; linha < LINHAS; linha++) {
       for (let coluna = 0; coluna < COLUNAS; coluna++) {
-        if (labirinto[linha][coluna] === 0 && Math.random() < 0.2) {
-          pontos.push(new Ponto(coluna * TAMANHO_TELA, linha * TAMANHO_TELA));
+        if (this.labirinto[linha][coluna] === 0 && Math.random() < 0.2) {
+          const ponto = new Ponto(coluna * TAMANHO_TELA, linha * TAMANHO_TELA);
+          if (!this.pontoEstaDentroDeQuadrado(ponto)) {
+            this.pontos.push(ponto);
+          }
+        } else if (Math.random() < 0.05) {
+          const bonus = new SlowDownBonus(coluna * TAMANHO_TELA, linha * TAMANHO_TELA);
+          if (!this.pontoEstaDentroDeQuadrado(bonus)) {
+            this.bonuses.push(bonus);
+          }
         }
       }
     }
-    return pontos;
+    // garantir que haja uma forma de vencer o jogo
+    const pontoFinal = new Ponto(COLUNAS * TAMANHO_TELA - TAMANHO_TELA, LINHAS * TAMANHO_TELA - TAMANHO_TELA);
+    if (!this.pontoEstaDentroDeQuadrado(pontoFinal)) {
+      this.pontos.push(pontoFinal);
+    }
   }
 
-  gerarBonus() {
-    const bonuses = [];
-    for (let linha = 0; linha < LINHAS; linha++) {
-      for (let coluna = 0; coluna < COLUNAS; coluna++) {
-        if (labirinto[linha][coluna] === 0 && Math.random() < 0.05) {
-          bonuses.push(new Bonus(coluna * TAMANHO_TELA, linha * TAMANHO_TELA));
-        }
-      }
-    }
-    return bonuses;
-  }
-
-  atualizar() {
-    this.pacman.mover();
-    this.pacman.atualizar(); 
-    for (let fantasma of this.fantasmas) {
-      fantasma.mover();
-    }
-    this.verificarColisoes();
-  }
-
-  verificarColisoes() {
-    
-    this.pontos = this.pontos.filter(ponto => {
-      if (dist(this.pacman.x, this.pacman.y, ponto.x, ponto.y) < TAMANHO_TELA / 2) {
-        this.pontuacao.aumentar();
-        return false;
-      }
-      return true;
-    });
-
-    
-    this.bonuses = this.bonuses.filter(bonus => {
-      if (dist(this.pacman.x, this.pacman.y, bonus.x, bonus.y) < TAMANHO_TELA / 2) {
-        this.pacman.aplicarBonus();
-        return false;
-      }
-      return true;
-    });
-
-    
-    for (let fantasma of this.fantasmas) {
-      if (dist(this.pacman.x, this.pacman.y, fantasma.x, fantasma.y) < TAMANHO_TELA) {
-        this.gameOver = true;
-      }
-    }
+  pontoEstaDentroDeQuadrado(ponto) {
+    const coluna = Math.floor(ponto.x / TAMANHO_TELA);
+    const linha = Math.floor(ponto.y / TAMANHO_TELA);
+    return this.labirinto[linha][coluna] === 1;
   }
 
   desenhar() {
-    this.desenharLabirinto();
-    for (let ponto of this.pontos) {
-      ponto.desenhar();
-    }
-    for (let bonus of this.bonuses) {
-      bonus.desenhar();
-    }
-    this.pacman.desenhar();
-    for (let fantasma of this.fantasmas) {
-      fantasma.desenhar();
-    }
-    this.pontuacao.desenhar();
-  }
-
-  desenharLabirinto() {
+    background('black');
     for (let linha = 0; linha < LINHAS; linha++) {
       for (let coluna = 0; coluna < COLUNAS; coluna++) {
-        if (labirinto[linha][coluna] === 1) {
+        if (this.labirinto[linha][coluna] === 1) {
           fill('blue');
           rect(coluna * TAMANHO_TELA, linha * TAMANHO_TELA, TAMANHO_TELA, TAMANHO_TELA);
         }
       }
     }
+    this.pacman.desenhar();
+    for (const fantasma of this.fantasmas) {
+      fantasma.desenhar();
+    }
+    for (const ponto of this.pontos) {
+      ponto.desenhar();
+    }
+    for (const bonus of this.bonuses) {
+      bonus.desenhar();
+    }
+    this.pontuacao.desenhar();
   }
-}
 
-  exibirGameOver() {
-    textSize(32);
-    fill('red');
-    textAlign(CENTER, CENTER);
-    text('Game Over', width / 2, height / 2);
+  atualizar() {
+    this.pacman.mover();
+    for (const fantasma of this.fantasmas) {
+      fantasma.mover();
+    }
+    for (const ponto of this.pontos) {
+      if (dist(this.pacman.x, this.pacman.y, ponto.x, ponto.y) < TAMANHO_TELA / 2) {
+        this.pontuacao.aumentar();
+        this.pontos.splice(this.pontos.indexOf(ponto), 1);
+      }
+    }
+    for (const bonus of this.bonuses) {
+      if (dist(this.pacman.x, this.pacman.y, bonus.x, bonus.y) < TAMANHO_TELA / 2) {
+        bonus.aplicar(this.pacman);
+        this.bonuses.splice(this.bonuses.indexOf(bonus), 1);
+      }
+    }
+    if (this.pontos.length === 0) {
+      this.gameOver = true;
+    }
+  }
+
+  keyPressed() {
+    if (keyCode === LEFT_ARROW) {
+      this.pacman.definirDirecao(-VELOCIDADE_JOGADOR, 0);
+    } else if (keyCode === RIGHT_ARROW) {
+      this.pacman.definirDirecao(VELOCIDADE_JOGADOR, 0);
+    } else if (keyCode === UP_ARROW) {
+      this.pacman.definirDirecao(0, -VELOCIDADE_JOGADOR);
+    } else if (keyCode === DOWN_ARROW) {
+      this.pacman.definirDirecao(0, VELOCIDADE_JOGADOR);
+    }
   }
 }
