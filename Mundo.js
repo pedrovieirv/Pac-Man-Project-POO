@@ -6,6 +6,7 @@ class Mundo {
       new Fantasma(TAMANHO_TELA * 10, TAMANHO_TELA * 10, 'blue')
     ];
     this.pontos = this.gerarPontos();
+    this.bonuses = this.gerarBonus();
     this.pontuacao = new Pontuacao();
     this.gameOver = false;
   }
@@ -22,9 +23,21 @@ class Mundo {
     return pontos;
   }
 
+  gerarBonus() {
+    const bonuses = [];
+    for (let linha = 0; linha < LINHAS; linha++) {
+      for (let coluna = 0; coluna < COLUNAS; coluna++) {
+        if (labirinto[linha][coluna] === 0 && Math.random() < 0.05) {
+          bonuses.push(new Bonus(coluna * TAMANHO_TELA, linha * TAMANHO_TELA));
+        }
+      }
+    }
+    return bonuses;
+  }
+
   atualizar() {
-    if (this.gameOver) return;
     this.pacman.mover();
+    this.pacman.atualizar(); 
     for (let fantasma of this.fantasmas) {
       fantasma.mover();
     }
@@ -32,11 +45,7 @@ class Mundo {
   }
 
   verificarColisoes() {
-    this.verificarColisoesPontos();
-    this.verificarColisoesFantasmas();
-  }
-
-  verificarColisoesPontos() {
+    
     this.pontos = this.pontos.filter(ponto => {
       if (dist(this.pacman.x, this.pacman.y, ponto.x, ponto.y) < TAMANHO_TELA / 2) {
         this.pontuacao.aumentar();
@@ -44,9 +53,17 @@ class Mundo {
       }
       return true;
     });
-  }
 
-  verificarColisoesFantasmas() {
+    
+    this.bonuses = this.bonuses.filter(bonus => {
+      if (dist(this.pacman.x, this.pacman.y, bonus.x, bonus.y) < TAMANHO_TELA / 2) {
+        this.pacman.aplicarBonus();
+        return false;
+      }
+      return true;
+    });
+
+    
     for (let fantasma of this.fantasmas) {
       if (dist(this.pacman.x, this.pacman.y, fantasma.x, fantasma.y) < TAMANHO_TELA) {
         this.gameOver = true;
@@ -59,14 +76,14 @@ class Mundo {
     for (let ponto of this.pontos) {
       ponto.desenhar();
     }
+    for (let bonus of this.bonuses) {
+      bonus.desenhar();
+    }
     this.pacman.desenhar();
     for (let fantasma of this.fantasmas) {
       fantasma.desenhar();
     }
     this.pontuacao.desenhar();
-    if (this.gameOver) {
-      this.exibirGameOver();
-    }
   }
 
   desenharLabirinto() {
@@ -79,6 +96,7 @@ class Mundo {
       }
     }
   }
+}
 
   exibirGameOver() {
     textSize(32);
