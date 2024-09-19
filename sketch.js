@@ -1,66 +1,51 @@
 
-const TAMANHO_TELA = 20;
-const LINHAS = 11;
-const COLUNAS = 20;
-const VELOCIDADE_JOGADOR = 0.1 * TAMANHO_TELA;
-const VELOCIDADE_FANTASMA = 0.1 * TAMANHO_TELA;
-
-
-let labirinto;
 let mundo;
+let LINHAS = 20;
+let COLUNAS = 20;
+let TAMANHO_TELA = 20;
+let VELOCIDADE_JOGADOR = 2;
+let VELOCIDADE_FANTASMA = 1;
 
 
 function setup() {
   createCanvas(COLUNAS * TAMANHO_TELA, LINHAS * TAMANHO_TELA);
-  labirinto = gerarLabirinto(LINHAS, COLUNAS);
   mundo = new Mundo();
+  mundo.labirinto = gerarLabirinto(LINHAS, COLUNAS);
+  mundo.gerarPontos();
+  
+  mundo.pacman.x = TAMANHO_TELA * 2;
+  mundo.pacman.y = TAMANHO_TELA * 2;
 }
 
+
 function draw() {
-  background(0);
   if (!mundo.gameOver) {
     mundo.atualizar();
     mundo.desenhar();
   } else {
     fill('white');
     textSize(32);
-    textAlign(CENTER, CENTER);
-    text('Game Over', width / 2, height / 2);
+    text('Game Over!', width / 2 - 80, height / 2);
   }
+}
+
+
+function keyPressed() {
+  mundo.keyPressed();
 }
 
 
 function gerarLabirinto(linhas, colunas) {
   const labirinto = [];
   for (let linha = 0; linha < linhas; linha++) {
-    const linhaArray = [];
+    labirinto[linha] = [];
     for (let coluna = 0; coluna < colunas; coluna++) {
-      if (eBorda(linha, coluna, linhas, colunas)) {
-        linhaArray.push(1);
+      if (linha === 0 || linha === linhas - 1 || coluna === 0 || coluna === colunas - 1) {
+        labirinto[linha][coluna] = 1; 
       } else {
-        linhaArray.push(Math.random() < 0.7 ? 0 : 1);
+        labirinto[linha][coluna] = Math.random() < 0.2 ? 1 : 0; 
       }
     }
-    labirinto.push(linhaArray);
   }
-  labirinto[1][1] = 0; 
-  labirinto[linhas - 2][colunas - 2] = 0; 
   return labirinto;
-}
-
-function eBorda(linha, coluna, linhas, colunas) {
-  return linha === 0 || linha === linhas - 1 || coluna === 0 || coluna === colunas - 1;
-}
-
-
-function keyPressed() {
-  if (keyCode === LEFT_ARROW) {
-    mundo.pacman.definirDirecao(-mundo.pacman.velocidade, 0);
-  } else if (keyCode === RIGHT_ARROW) {
-    mundo.pacman.definirDirecao(mundo.pacman.velocidade, 0);
-  } else if (keyCode === UP_ARROW) {
-    mundo.pacman.definirDirecao(0, -mundo.pacman.velocidade);
-  } else if (keyCode === DOWN_ARROW) {
-    mundo.pacman.definirDirecao(0, mundo.pacman.velocidade);
-  }
 }
