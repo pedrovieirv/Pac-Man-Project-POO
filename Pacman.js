@@ -8,3 +8,5 @@ class PacMan extends Entidade {
     arc(this.x + TAMANHO_TELA / 2, this.y + TAMANHO_TELA / 2, TAMANHO_TELA, TAMANHO_TELA, QUARTER_PI, -QUARTER_PI, PIE);
   }
 }
+
+
