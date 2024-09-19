@@ -19,7 +19,7 @@ class Entidade {
   podeMover(x, y) {
     const coluna = Math.floor(x / TAMANHO_TELA);
     const linha = Math.floor(y / TAMANHO_TELA);
-    return coluna >= 0 && coluna < COLUNAS && linha >= 0 && linha < LINHAS && labirinto[linha][coluna] === 0;
+    return coluna >= 0 && coluna < COLUNAS && linha >= 0 && linha < LINHAS && mundo.labirinto[linha][coluna] === 0;
   }
 
   definirDirecao(x, y) {
