@@ -47,3 +47,25 @@ se não, escreva para a Free Software Foundation, Inc., 51 Franklin Street, Fift
 Boston, MA 02110-1301, USA.
 
 
+
+### segunda unidade 
+
+### Estrutura Geral
+ Variáveis globais e constantes estavam no início do código.
+  Todas as constantes e variáveis globais foram movidas para o final do código.
+
+### Funções de Geração de Labirinto
+ -A lógica de geração do labirinto estava mesclada com a lógica do jogo.
+ -A função de geração do labirinto foi separada na classe `Mundo`, que é inicializada ao criar o jogo.
+
+### Classes de Bônus
+ -Manipulação direta da velocidade do PacMan.
+ -Introduziu a classe base `Bonus` e a subclasse `SlowDownBonus`, mas a lógica de diminuição de velocidade ainda precisa ser revisada.
+
+### Método de Colisão
+ -Verificações de colisões misturadas em um único bloco.
+ -O método `verificarColisoes` foi criado, mas a complexidade aumentou sem trazer melhorias claras. 
+
+foi basicamente o que fizemos no código nessa segunda unidade 
+
+
